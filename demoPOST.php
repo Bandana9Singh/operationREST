@@ -1,59 +1,66 @@
-
-
 <?php
 
- $username = 'http-auth-username';
- $password = 'http-auth-password';
-$process = curl_init("url");
 
-$headers = array(
-    "Content-type: text/xml;charset=\"utf-8\"",
-    "Accept: text/xml",
-    "Cache-Control: no-cache",
-    "Pragma: no-cache",
-    "Authorization: Basic " .base64_encode($username . ":" . $password)
- );
-/* Send data in XML form
- $xml_data ='<AATAvailReq1>'.
-    '<Agency>'.
-        '<Iata>1234567890</Iata>'.
-        '<Agent>lgsoftwares</Agent>'.
-        '<Password>mypassword</Password>'.
-        '<Brand>phpmind.com</Brand>'.
-    '</Agency>'.
-    '<Passengers>'.
-        '<Adult AGE="" ID="1"></Adult>'.
-        '<Adult AGE="" ID="2"></Adult>'.
-    '</Passengers>'.
-'<HotelAvailReq1>'.
-'<DestCode>JHM</DestCode>'.
-        '<HotelCode>OGGSHE</HotelCode>'.
-        '<CheckInDate>101009</CheckInDate>'.
-        '<CheckOutDate>101509</CheckOutDate>'.
-        '<UseField>1</UseField>'.
-  '</HotelAvailReq1>'.  
-  '</AATAvailReq1>';
-*/
-// For post request
-$attachment =  array(
-'access_token' => $token,
-'message' => $msg,
-'name' => $title,
-'link' => $uri,
-'description' => $desc,
-'picture'=>$pic,
-'actions' => json_encode(array('name' => $action_name,'link' => $action_link))
-);
 
-curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-//curl_setopt($process, CURLOPT_HTTPHEADER, array('Content-Type: application/xml'));
-curl_setopt($process, CURLOPT_HEADER, 1);
-//curl_setopt($process, CURLOPT_USERPWD, admin . ":" .admin );
-curl_setopt($process, CURLOPT_TIMEOUT, 30);
-curl_setopt($process, CURLOPT_POST, 1);
-curl_setopt($process, CURLOPT_POSTFIELDS, $attachment);
-curl_setopt($process, CURLOPT_RETURNTRANSFER, TRUE);
-$return = curl_exec($process);
-curl_close($process);
+$xml_data='<ApplicationServer xmlns="http://com/example">
+    <key1>val</key1>
+    <key1>val</key1>
+    <key1>val</key1>
+    
+    <Key4>
+        <Key4.1>val</Key4.1>
+        <Key4.2>
+            <Key4.2.1>val</Key4.2.1>
+            <Key4.2.2>val</Key4.2.2>
+        </Key4.2>
+       <Key4.3>
+            <Key4.3.1>val</Key4.3.1>
+            <Key4.3.2>val</Key4.3.2>
+        </Key3.2>
+    </Key4>
+</ApplicationServer>';
+
+
+
+echo $xml_data;
+$username='admin';
+$password='admin';
+$url = 'url';
+$ch = curl_init($url);
+//echo "Sleeping for 5 secs";
+//sleep(5);
+$passwordStr = "$username:$password";
+$successCode = 201;
+
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_VERBOSE, true);
+curl_setopt($ch, CURLOPT_USERPWD, $passwordStr);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/vnd.yang.data+xml'));
+//curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 300);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+//curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization: Basic " .base64_encode($username . ":" . $password)));
+curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_data);
+
+$buffer = curl_exec($ch);
+$info = curl_getinfo($ch);
+print_r($info);
+$xml = simplexml_load_string($buffer);
+$json=json_encode($xml);
+
+        print_r('<pre>');
+        print_r($json);
+        print_r('</pre>');
+
+if ($info['http_code'] != $successCode) {
+    $returnVal = "0";
+} else {
+$returnVal = $json;
+}
+
+curl_close($ch);
+
+echo $returnVal;
 
 ?>
