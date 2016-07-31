@@ -7,15 +7,9 @@ $successCode = 200;
        
 $buffer = curl_exec($ch);
 $info = curl_getinfo($ch,CURLINFO_HTTP_CODE);
-// print_r($buffer);
-
-//$xml = simplexml_load_string($buffer);
-//echo $xml;
 $json=json_decode($buffer,true);
-//   print_r($json);
 
 $users=$json['results'];
-//print_r($users);
 foreach($users as $i){
 $k= $i['address_components'];
 	foreach($k as $j){
@@ -38,19 +32,6 @@ $returnVal = "true";
 }
 
 curl_close($ch);
-
-echo $returnVal;
-
-
-
-/*if ( $httpCode != 200 ){
-    echo "Return code is {$httpCode} \n"
-        .curl_error($ch);
-} else {
-    echo "<pre>".htmlspecialchars($response)."</pre>";
-}
-
-curl_close($ch);*/
 ?>
 
 
