@@ -30,7 +30,7 @@ if ($info!= $successCode) {
 } else {
 $returnVal = "true";
 }
-
+echo $returnVal;
 curl_close($ch);
 ?>
 
